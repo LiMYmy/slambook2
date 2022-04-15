@@ -1,12 +1,19 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.12)
 project(useSophus)
 
-# 为使用 sophus，需要使用find_package命令找到它
-find_package(Sophus REQUIRED)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin/Debug)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/Release)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin/Debug)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/Release)
 
-# Eigen
-include_directories("/usr/include/eigen3")
+find_package(Eigen3 REQUIRED)
+find_package(fmt)
+
+include_directories("../Sophus")
+
 add_executable(useSophus useSophus.cpp)
-target_link_libraries(useSophus Sophus::Sophus)
+target_compile_features(useSophus PUBLIC cxx_std_14)
+target_link_libraries(useSophus Eigen3::Eigen fmt::fmt)
+target_compile_definitions(useSophus PUBLIC USE_BASIC_LOGGING=ON)
 
 add_subdirectory(example)
