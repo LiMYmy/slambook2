@@ -17,9 +17,9 @@ namespace myslam {
 
 Frontend::Frontend() {
     gftt_ =
-        cv::GFTTDetector::create(Config::Get<int>("num_features"), 0.01, 20);
-    num_features_init_ = Config::Get<int>("num_features_init");
-    num_features_ = Config::Get<int>("num_features");
+        cv::GFTTDetector::create(Config::Instance().Get<int>("num_features"), 0.01, 20);
+    num_features_init_ = Config::Instance().Get<int>("num_features_init");
+    num_features_ = Config::Instance().Get<int>("num_features");
 }
 
 bool Frontend::AddFrame(myslam::Frame::Ptr frame) {
@@ -292,7 +292,7 @@ int Frontend::DetectFeatures() {
     cv::Mat mask(current_frame_->left_img_.size(), CV_8UC1, 255);
     for (auto &feat : current_frame_->features_left_) {
         cv::rectangle(mask, feat->position_.pt - cv::Point2f(10, 10),
-                      feat->position_.pt + cv::Point2f(10, 10), 0, CV_FILLED);
+                      feat->position_.pt + cv::Point2f(10, 10), 0, cv::FILLED);
     }
 
     std::vector<cv::KeyPoint> keypoints;

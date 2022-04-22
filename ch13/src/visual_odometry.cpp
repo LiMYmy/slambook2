@@ -12,12 +12,12 @@ VisualOdometry::VisualOdometry(std::string &config_path)
 
 bool VisualOdometry::Init() {
     // read from config file
-    if (Config::SetParameterFile(config_file_path_) == false) {
+    if (Config::Instance().SetParameterFile(config_file_path_) == false) {
         return false;
     }
 
     dataset_ =
-        Dataset::Ptr(new Dataset(Config::Get<std::string>("dataset_dir")));
+        Dataset::Ptr(new Dataset(Config::Instance().Get<std::string>("dataset_dir")));
     CHECK_EQ(dataset_->Init(), true);
 
     // create components and links
@@ -55,7 +55,8 @@ void VisualOdometry::Run() {
 
 bool VisualOdometry::Step() {
     Frame::Ptr new_frame = dataset_->NextFrame();
-    if (new_frame == nullptr) return false;
+    if (new_frame == nullptr) 
+        return false;
 
     auto t1 = std::chrono::steady_clock::now();
     bool success = frontend_->AddFrame(new_frame);

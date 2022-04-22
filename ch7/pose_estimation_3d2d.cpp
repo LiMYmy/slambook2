@@ -10,6 +10,8 @@
 #include <g2o/core/block_solver.h>
 #include <g2o/core/solver.h>
 #include <g2o/core/optimization_algorithm_gauss_newton.h>
+#include <g2o/core/optimization_algorithm_levenberg.h>
+#include <g2o/core/optimization_algorithm_dogleg.h>
 #include <g2o/solvers/dense/linear_solver_dense.h>
 #include <sophus/se3.hpp>
 #include <chrono>
@@ -314,8 +316,10 @@ void bundleAdjustmentG2O(
   typedef g2o::BlockSolver<g2o::BlockSolverTraits<6, 3>> BlockSolverType;  // pose is 6, landmark is 3
   typedef g2o::LinearSolverDense<BlockSolverType::PoseMatrixType> LinearSolverType; // 线性求解器类型
   // 梯度下降方法，可以从GN, LM, DogLeg 中选
-  auto solver = new g2o::OptimizationAlgorithmGaussNewton(
-    g2o::make_unique<BlockSolverType>(g2o::make_unique<LinearSolverType>()));
+  // auto solver = new g2o::OptimizationAlgorithmGaussNewton(
+  //   g2o::make_unique<BlockSolverType>(g2o::make_unique<LinearSolverType>()));
+  auto solver = new g2o::OptimizationAlgorithmLevenberg(
+    g2o::make_unique<BlockSolverType>(g2o::make_unique<LinearSolverType>()));    
   g2o::SparseOptimizer optimizer;     // 图模型
   optimizer.setAlgorithm(solver);   // 设置求解器
   optimizer.setVerbose(true);       // 打开调试输出
